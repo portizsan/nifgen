@@ -1,8 +1,23 @@
-var http = require("http");
-var nifgen = require("./nifgen");
-http.createServer(function(request, response) {
-  response.writeHead(200, {"Content-Type": "application/json"});
-  response.write(nifgen.gens(100));
-  response.end();
-}).listen(8888);
+#!/usr/bin/env node
 
+var nifgen = require("./nifgen");
+
+var http = require('http'),
+    port = 8080,
+     url = 'http://localhost:' + port + '/';
+	 
+/* We can access nodejitsu enviroment variables from process.env */
+/* Note: the SUBDOMAIN variable will always be defined for a nodejitsu app */
+if(process.env.SUBDOMAIN){
+  url = 'http://' + process.env.SUBDOMAIN + '.jit.su/';
+}
+
+http.createServer(function (req, res) {
+  res.writeHead(200, {"Content-Type": "application/json"});
+  res.write(nifgen.gens(100));
+  res.end();
+}).listen(port);
+
+
+
+console.log('The http server has started at: ' + url);
